@@ -16,6 +16,7 @@ namespace LibraryDomain.Model
         public string LastName { get; set; } = null!;
 
         public DateTime Birthday { get; set; }
+        public ICollection<ReadingList> ReadingLists { get; set; } = new List<ReadingList>();
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
         public virtual ICollection<Shelf> Shelves { get; set; } = new List<Shelf>();

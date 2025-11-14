@@ -1,0 +1,25 @@
+﻿<h2>Your Reading Lists</h2>
+
+<a asp-action="Create" class="btn btn-primary">Create New List</a>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Owner</th>
+            <th>Public</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var list in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@list.Id">@list.Title</a>
+                </td>
+                <td>@list.OwnerId</td>
+                <td>@(list.IsPublic ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>
