@@ -1,0 +1,15 @@
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\bin\Debug\net8.0\LibraryDomain.deps.json
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\bin\Debug\net8.0\LibraryDomain.runtimeconfig.json
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\bin\Debug\net8.0\LibraryDomain.dll
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\bin\Debug\net8.0\LibraryDomain.pdb
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.csproj.AssemblyReference.cache
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.AssemblyInfoInputs.cache
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.AssemblyInfo.cs
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.csproj.CoreCompileInputs.cache
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.dll
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\refint\LibraryDomain.dll
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.pdb
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.genruntimeconfig.cache
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\ref\LibraryDomain.dll
+C:\Users\Kate\source\repos\LabISandTPLibrary1\src\Library_MVC2\LibraryDomain\obj\Debug\net8.0\LibraryDomain.sourcelink.json

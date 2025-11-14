@@ -1,0 +1,22 @@
+[
+  {
+    "ContainingType": "LibraryInfrastructure.Controllers.ChartController",
+    "Method": "GetCountByAuthorAsync",
+    "RelativePath": "api/Chart/countByAuthor",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryInfrastructure.Controllers.ChartController",
+    "Method": "GetCountByPublisherAsync",
+    "RelativePath": "api/Chart/countByPublisher",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]
