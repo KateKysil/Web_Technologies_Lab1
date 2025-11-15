@@ -108,6 +108,13 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
+var botToken = builder.Configuration["TelegramBot:Token"];
+using var scope1 = app.Services.CreateScope();
+var db = scope1.ServiceProvider.GetRequiredService<LibraryContext>();
+
+var botService = new TelegramBotService(db, botToken);
+botService.Start();
 app.MapRazorPages();
 app.MapHub<ReadingListHub>("/readingListHub");
 app.MapHub<BoardHub>("/boardHub");
