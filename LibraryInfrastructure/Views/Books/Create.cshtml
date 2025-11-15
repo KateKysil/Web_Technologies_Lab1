@@ -28,6 +28,11 @@
                 <select asp-for="PublisherId" class="form-control" asp-items="ViewBag.PublisherId"></select>
             </div>
             <div class="form-group">
+                <label asp-for="BookCoverUrl" class="control-label"></label>
+                <input asp-for="BookCoverUrl" class="form-control" />
+                <span asp-validation-for="BookCoverUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 @Html.AntiForgeryToken()
                 <label for="BookAuthors">Select Authors</label>
                 <select id="BookAuthors" name="selectAuthorsforBook" class="form-control" multiple="multiple">

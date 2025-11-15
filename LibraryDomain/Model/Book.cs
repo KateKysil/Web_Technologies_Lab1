@@ -12,7 +12,8 @@ public partial class Book : Entity
     public string Isbn { get; set; } = null!;
     [Display(Name = "Назва видавництва")]
     public long PublisherId { get; set; }
-
+    [Display(Name = "Посилання на зображення обкладинки")]
+    public string? BookCoverUrl { get; set; }
     public virtual ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
     public virtual ICollection<BookGenre> BookGenres { get; set; } = new List<BookGenre>();
 

@@ -1,56 +1,77 @@
 ﻿@model LibraryDomain.Model.Book
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Title;
 }
 
-<h1>Details</h1>
+<div class="container py-5">
 
-<div>
-    <h4>Book</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Isbn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Isbn)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Publisher)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Publisher.PublisherName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.BookAuthors)
-        </dt>
-        <dd class="col-sm-10">
-            @foreach (var author in Model.BookAuthors)
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold">@Model.Title</h1>
+        <p class="text-muted">A story worth exploring—discover the details below.</p>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <!-- Book Cover -->
+        <div class="col-md-4 text-center mb-4">
+            @if (!string.IsNullOrEmpty(Model.BookCoverUrl))
             {
-                var fullName = author.Author.LastName + " " + author.Author.FirstName;
-                @fullName <br />
+                <img src="@Model.BookCoverUrl" class="img-fluid rounded shadow-sm"
+                     style="max-height: 350px; object-fit: cover;" />
             }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.BookGenres)
-        </dt>
-        <dd class="col-sm-10">
-            @foreach (var genre in Model.BookGenres)
+            else
             {
-                @genre.Genre.GenreName <br />
+                <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+                     style="height: 350px;">
+                    <span class="text-muted">No Cover Available</span>
+                </div>
             }
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-info">Edit</a> |
-    <a asp-action="Comments_Admin" asp-route-id="@Model?.Id" class="btn btn-info">Read Comments</a> |
-    <a asp-action="Index_Admin" class="btn btn-info">Back to List</a>
+        </div>
+
+        <!-- Details -->
+        <div class="col-md-6">
+
+            <h4 class="mb-3">Book Information</h4>
+
+            <div class="mb-2">
+                <strong>ISBN:</strong> @Model.Isbn
+            </div>
+
+            <div class="mb-2">
+                <strong>Publisher:</strong> @Model.Publisher.PublisherName
+            </div>
+
+            <div class="mb-2">
+                <strong>Authors:</strong>
+                <div>
+                    @foreach (var author in Model.BookAuthors)
+                    {
+                        var fullName = author.Author.LastName + " " + author.Author.FirstName;
+                        <span class="badge bg-secondary me-1">@fullName</span>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <strong>Genres:</strong>
+                <div>
+                    @foreach (var genre in Model.BookGenres)
+                    {
+                        <span class="badge bg-primary me-1">@genre.Genre.GenreName</span>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+        <a asp-action="Comments_Admin" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Read Comments</a>
+        <a asp-action="Index_Admin" class="btn btn-outline-dark">Back to List</a>
+    </div>
+
 </div>

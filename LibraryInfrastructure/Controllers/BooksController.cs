@@ -203,6 +203,27 @@ namespace LibraryInfrastructure.Controllers
 
             return View(book);
         }
+        public async Task<IActionResult> Landing(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.Books
+                .Include(b => b.Publisher).
+                Include(b => b.BookAuthors).
+                ThenInclude(ba => ba.Author).
+                Include(b => b.BookGenres).
+                ThenInclude(g => g.Genre).
+                FirstOrDefaultAsync(m => m.Id == id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return View(book);
+        }
         public async Task<IActionResult> Details_User(long? id)
         {
             if (id == null)
@@ -350,7 +371,7 @@ namespace LibraryInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Isbn,PublisherId,Id")] Book book, List<long> selectAuthorsforBook, List<long> selectGenresforBook)
+        public async Task<IActionResult> Create([Bind("Title,Isbn,PublisherId,BookCoverUrl,Id")] Book book, List<long> selectAuthorsforBook, List<long> selectGenresforBook)
         {
             //if (!ModelState.IsValid)
             //{
@@ -445,7 +466,7 @@ namespace LibraryInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Title,Isbn,PublisherId,Id")] Book book, List<long> selectAuthorsforBook, List<long> selectGenresforBook)
+        public async Task<IActionResult> Edit(long id, [Bind("Title,Isbn,PublisherId,BookCoverUrl,Id")] Book book, List<long> selectAuthorsforBook, List<long> selectGenresforBook)
         {
             if (id != book.Id)
             {
