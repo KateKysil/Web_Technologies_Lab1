@@ -1,6 +1,7 @@
 using LibraryDomain.Model;
 using LibraryInfrastructure;
 using LibraryInfrastructure.Hubs;
+using LibraryInfrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHostedService<RabbitMqTelegramConsumer>();
+
 
 var app = builder.Build();
 /*app.Use(async (context, next) =>
@@ -115,6 +118,7 @@ var db = scope1.ServiceProvider.GetRequiredService<LibraryContext>();
 
 var botService = new TelegramBotService(db, botToken);
 botService.Start();
+
 app.MapRazorPages();
 app.MapHub<ReadingListHub>("/readingListHub");
 app.MapHub<BoardHub>("/boardHub");

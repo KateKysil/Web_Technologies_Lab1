@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
-                <input asp-for="Country" class="form-control" />
+                <input asp-for="Country" class="form-control" id="CountryInput" />
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,7 +39,32 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#CountryInput").autocomplete({
+                source: function(request, response) {
+                    if (request.term.length < 3) return;
+
+                    $.ajax({
+                        url: 'https://restcountries.com/v3.1/name/' + encodeURIComponent(request.term),
+                        method: 'GET',
+                        success: function(data) {
+                            const countries = data.map(c => c.name.common);
+                            response(countries.slice(0, 10));
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                },
+                minLength: 3,
+                delay: 300
+            });
+        });
+    </script>
 }
