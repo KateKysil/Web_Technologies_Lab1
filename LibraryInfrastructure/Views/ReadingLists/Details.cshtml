@@ -3,20 +3,30 @@
 <h2>@Model.Title</h2>
 
 <div>
-    <input id="newItemInput" placeholder="Add book..." class="form-control" />
-    <button id="addBtn" class="btn btn-primary mt-2">Add</button>
+    <input id="themeInput" placeholder="Add theme..." class="form-control" />
+    <button id="addThemeBtn" class="btn btn-success mt-2">Add Theme</button>
 </div>
 
-<ul id="itemsList" class="mt-3">
-    @foreach (var item in Model.Items)
-    {
-        <li data-id="@item.Id">
-            <input type="checkbox" @(item.IsDone ? "checked" : "") class="chk" />
-            @item.Text
-            <button class="del btn btn-danger btn-sm">X</button>
-        </li>
-    }
-</ul>
+@foreach (var theme in Model.Themes)
+{
+    <h3>@theme.Name</h3>
+
+    <div>
+        <input class="newItemInput" data-theme="@theme.Id" placeholder="Add item..." />
+        <button class="addItemBtn btn btn-primary" data-theme="@theme.Id">Add</button>
+    </div>
+
+    <ul>
+        @foreach (var item in theme.Items)
+        {
+            <li data-id="@item.Id">
+                <input type="checkbox" @(item.IsDone ? "checked" : "") class="chk" />
+                @item.Text
+                <button class="del btn btn-danger btn-sm">X</button>
+            </li>
+        }
+    </ul>
+}
 
 @section Scripts {
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
@@ -33,20 +43,38 @@
         connection.start().then(function () {
             connection.invoke("SyncList", listId);
         });
+                document.getElementById("addThemeBtn").onclick = function () {
+            const title = document.getElementById("themeInput").value;
 
-        document.getElementById("addBtn").onclick = function () {
-            const text = document.getElementById("newItemInput").value;
-            fetch(`/api/readinglists/${listId}/items`, {
+            fetch(`/api/readinglists/${listId}/themes`, {
                 method: "POST",
-                body: JSON.stringify({ text }),
+                body: JSON.stringify({ title }),
                 headers: { "Content-Type": "application/json" }
-                }).then(response => {
-            if (response.ok) {
-                location.reload();
-                connection.invoke("UpdateList", listId);
-            }
-        });
+            }).then(r => {
+                if (r.ok) {
+                    location.reload();
+                    connection.invoke("UpdateList", listId);
+                }
+            });
         };
+                document.querySelectorAll(".addItemBtn").forEach(btn => {
+            btn.onclick = function () {
+                const themeId = this.dataset.theme;
+                const input = document.querySelector(`.newItemInput[data-theme="${themeId}"]`);
+                const text = input.value;
+
+                fetch(`/api/readinglists/themes/${themeId}/items`, {
+                    method: "POST",
+                    body: JSON.stringify({ text }),
+                    headers: { "Content-Type": "application/json" }
+                }).then(r => {
+                    if (r.ok) {
+                        location.reload();
+                        connection.invoke("UpdateList", listId);
+                    }
+                });
+            };
+        });
 
         document.querySelectorAll(".chk").forEach(chk => {
             chk.onchange = function () {

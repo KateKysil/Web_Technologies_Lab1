@@ -23,6 +23,7 @@ namespace LibraryInfrastructure
         public DbSet<ShelfBook> ShelfBooks => Set<ShelfBook>();
         public DbSet<UserLibrary> UserLibraries => Set<UserLibrary>();
         public DbSet<ReadingList> ReadingLists =>Set<ReadingList>();
+        public DbSet<ReadingListTheme> ReadingListThemes => Set<ReadingListTheme>();
         public DbSet<ReadingListItem> ReadingListItems => Set<ReadingListItem>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -86,17 +87,25 @@ namespace LibraryInfrastructure
                 .HasOne(b => b.Publisher)
                 .WithMany(p => p.Books)
                 .HasForeignKey(b => b.PublisherId);
+
             modelBuilder.Entity<ReadingList>()
-                .HasMany(rl => rl.Items)
-                .WithOne(i => i.ReadingList)
-                .HasForeignKey(i => i.ReadingListId)
-                .OnDelete(DeleteBehavior.Cascade);
+    .HasMany(rl => rl.Themes)
+    .WithOne(t => t.ReadingList)
+    .HasForeignKey(t => t.ReadingListId)
+    .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ReadingList>()
                 .HasOne(rl => rl.Owner)
-                .WithMany(u => u.ReadingLists)   
+                .WithMany(u => u.ReadingLists)
                 .HasForeignKey(rl => rl.OwnerId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ReadingListTheme>()
+                .HasMany(t => t.Items)
+                .WithOne(i => i.Theme)
+                .HasForeignKey(i => i.ThemeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

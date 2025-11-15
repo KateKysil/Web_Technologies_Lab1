@@ -21,7 +21,7 @@
                     <td>
                         <a asp-action="Details" asp-route-id="@list.Id">@list.Title</a>
                     </td>
-                    <td>@(list.IsPublic ? "Yes" : "No")</td>
+                    <td>@(list.isPublic ? "Yes" : "No")</td>
                 </tr>
             }
         </tbody>
@@ -45,7 +45,7 @@
                     <td>
                         <a asp-action="Details" asp-route-id="@list.Id">@list.Title</a>
                     </td>
-                    <td>@list.OwnerId</td>
+                    <td>@list.Owner.FirstName+@list.Owner.LastName</td>
                 </tr>
             }
         </tbody>

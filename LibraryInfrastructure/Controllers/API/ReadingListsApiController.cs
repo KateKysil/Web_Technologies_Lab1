@@ -15,18 +15,35 @@ namespace LibraryInfrastructure.Controllers.API
         {
             _db = db;
         }
+        [HttpPost("{listId}/themes")]
+        public async Task<IActionResult> AddTheme(int listId, [FromBody] AddThemeDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                return BadRequest("Title is required");
 
-        [HttpPost("{listId}/items")]
-        public async Task<IActionResult> AddItem(int listId, [FromBody] AddReadingListItemDto dto)
+            var theme = new ReadingListTheme
+            {
+                ReadingListId = listId,
+                Name = dto.Title
+            };
+
+            _db.ReadingListThemes.Add(theme);
+            await _db.SaveChangesAsync();
+
+            return Ok(theme);
+        }
+
+        [HttpPost("themes/{themeId}/items")]
+        public async Task<IActionResult> AddItemToTheme(int themeId, [FromBody] AddThemeItemDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Text))
                 return BadRequest("Text is required");
 
             var item = new ReadingListItem
             {
-                ReadingListId = listId,  
-                Text = dto.Text,        
-                IsDone = false         
+                ThemeId = themeId,
+                Text = dto.Text,
+                IsDone = false
             };
 
             _db.ReadingListItems.Add(item);

@@ -27,7 +27,7 @@ namespace LibraryInfrastructure.Controllers
                 .ToListAsync();
 
             var publicLists = await _db.ReadingLists
-                .Where(l => l.IsPublic && l.OwnerId != userId)
+                .Where(l => l.isPublic && l.OwnerId != userId)
                 .ToListAsync();
 
             var vm = new ReadingListsIndexViewModel
@@ -42,28 +42,31 @@ namespace LibraryInfrastructure.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var list = await _db.ReadingLists
-                .Include(l => l.Items)
+                .Include(l => l.Themes)
+                    .ThenInclude(t => t.Items)
                 .FirstOrDefaultAsync(l => l.Id == id);
 
-            if (list == null) return NotFound();
+            if (list == null)
+                return NotFound();
 
             return View(list);
         }
+
         public async Task<IActionResult> Create()
         {
             var userId = _userManager.GetUserId(User);
+
             var existing = await _db.ReadingLists
                 .FirstOrDefaultAsync(l => l.OwnerId == userId);
 
             if (existing != null)
                 return RedirectToAction("Details", new { id = existing.Id });
 
-            // Create new list
             var list = new ReadingList
             {
                 Title = "My Reading List",
                 OwnerId = userId,
-                IsPublic = false
+                isPublic = false
             };
 
             _db.ReadingLists.Add(list);
