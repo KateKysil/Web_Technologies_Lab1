@@ -1,0 +1,112 @@
+﻿
+.wb-page {
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.wb-toolbar {
+    padding: 10px;
+    background: #f7f7f7;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+    .wb-toolbar .tool {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        .wb-toolbar .tool.danger {
+            background: #fff4f4;
+            border-color: #ffcccc;
+            color: #b30000;
+        }
+
+        .wb-toolbar .tool.note {
+            background: #fff9d9;
+            border-color: #ffeaa7;
+        }
+
+.wb-container {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+}
+
+#boardCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #fff;
+    touch-action: none;
+}
+
+.notes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; 
+}
+
+.note {
+    position: absolute;
+    width: 200px;
+    min-height: 120px;
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+    transform: rotate(-2deg);
+    border-radius: 6px;
+    pointer-events: auto; 
+    cursor: grab;
+    user-select: none;
+}
+
+.note-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.note-delete {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #333;
+}
+
+.note-text {
+    margin-top: 6px;
+    outline: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #111;
+    line-height: 1.2;
+    white-space: pre-wrap;
+}
+
+/* dragging state */
+.note.dragging {
+    opacity: .95;
+    cursor: grabbing;
+    transform: rotate(0deg);
+}
+
+/* footer */
+.wb-footer {
+    padding: 8px 12px;
+    border-top: 1px solid #eee;
+    background: #fafafa;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}

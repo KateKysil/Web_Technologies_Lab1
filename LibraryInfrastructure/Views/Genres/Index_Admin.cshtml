@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LibraryDomain.Model.Genre>
+﻿@model LibraryInfrastructure.Controllers.GenreIndexVM
 
 @{
     ViewData["Title"] = "Жанри";
@@ -6,27 +6,37 @@
 
 <h1>Жанри</h1>
 
-<a asp-action="Create" class="btn btn-sm btn-outline-info me-1" title="Create">
+<a asp-action="Create" class="btn btn-sm btn-outline-info me-1">
     Add New Genre
 </a>
+
 <br />
 <br />
-<div class="list-group">
-    @foreach (var item in Model)
+
+<div class="list-group mb-5">
+    @foreach (var item in Model.Genres)
     {
         <div class="list-group-item d-flex justify-content-between align-items-center">
             <span class="fs-5">@item.GenreName</span>
             <div>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1">
                     <i class="bi bi-pencil"></i>
                 </a>
-                <a asp-action="Details_Admin" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details">
+                <a asp-action="Details_Admin" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1">
                     <i class="bi bi-info-circle"></i>
                 </a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
                     <i class="bi bi-trash"></i>
                 </a>
             </div>
         </div>
     }
+</div>
+
+<h3 class="mb-3">Відео про жанри</h3>
+
+<div class="row">
+    <video width="400" controls>
+        <source src="https://kysilkateweblibrary1.blob.core.windows.net/videos/29012024_%D1%83%D0%B7%D0%BA.mkv" type="video/mp4">
+    </video>
 </div>

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DocumentFormat.OpenXml.Presentation;
+using LibraryDomain.Model;
+using LibraryInfrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LibraryDomain.Model;
-using LibraryInfrastructure;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LibraryInfrastructure.Controllers
 {
@@ -22,15 +23,33 @@ namespace LibraryInfrastructure.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genres.ToListAsync());
+            var vm = new GenreIndexVM
+            {
+                Genres = await _context.Genres.ToListAsync(),
+                Videos = await _context.Videos.ToListAsync()
+            };
+
+            return View(vm);
         }
         public async Task<IActionResult> Index_Admin()
         {
-            return View(await _context.Genres.ToListAsync());
+            var vm = new GenreIndexVM
+            {
+                Genres = await _context.Genres.ToListAsync(),
+                Videos = await _context.Videos.ToListAsync()
+            };
+
+            return View(vm);
         }
         public async Task<IActionResult> Index_User()
         {
-            return View(await _context.Genres.ToListAsync());
+            var vm = new GenreIndexVM
+            {
+                Genres = await _context.Genres.ToListAsync(),
+                Videos = await _context.Videos.ToListAsync()
+            };
+
+            return View(vm);
         }
 
         // GET: Genres/Details/5
@@ -197,5 +216,10 @@ namespace LibraryInfrastructure.Controllers
         {
             return _context.Genres.Any(e => e.Id == id);
         }
+    }
+    public class GenreIndexVM
+    {
+        public IEnumerable<Genre> Genres { get; set; }
+        public IEnumerable<Videos> Videos { get; set; }
     }
 }

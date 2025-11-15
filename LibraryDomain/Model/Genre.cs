@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace LibraryDomain.Model;
+namespace LibraryDomain.Model {
 
 public partial class Genre : Entity
 {
@@ -12,4 +12,9 @@ public partial class Genre : Entity
     public string GenreName { get; set; } = null!;
 
     public virtual ICollection<BookGenre> BookGenres { get; set; } = new List<BookGenre>();
+}
+public partial class Videos : Entity
+{
+    public string VideoUrl { get; set; }
+}
 }

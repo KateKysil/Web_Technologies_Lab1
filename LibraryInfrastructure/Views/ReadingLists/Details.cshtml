@@ -7,89 +7,125 @@
     <button id="addThemeBtn" class="btn btn-success mt-2">Add Theme</button>
 </div>
 
-@foreach (var theme in Model.Themes)
-{
-    <h3>@theme.Name</h3>
-
-    <div>
-        <input class="newItemInput" data-theme="@theme.Id" placeholder="Add item..." />
-        <button class="addItemBtn btn btn-primary" data-theme="@theme.Id">Add</button>
-    </div>
-
-    <ul>
-        @foreach (var item in theme.Items)
-        {
-            <li data-id="@item.Id">
-                <input type="checkbox" @(item.IsDone ? "checked" : "") class="chk" />
-                @item.Text
-                <button class="del btn btn-danger btn-sm">X</button>
-            </li>
-        }
-    </ul>
-}
-
+<div id="themesContainer"></div> <!-- all themes/items rendered here -->
 @section Scripts {
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 
     <script>
         const listId = @Model.Id;
+        const pageSize = 5; // items per page
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/readingListHub")
             .build();
 
-        connection.on("ListUpdated", () => location.reload());
+        connection.on("ListUpdated", () => refreshThemes());
+        connection.start().then(() => connection.invoke("SyncList", listId));
 
-        connection.start().then(function () {
-            connection.invoke("SyncList", listId);
-        });
-                document.getElementById("addThemeBtn").onclick = function () {
-            const title = document.getElementById("themeInput").value;
+        
+            document.getElementById("addThemeBtn").onclick = function () {
+            const title = document.getElementById("themeInput").value.trim();
+            if (!title) return;
 
             fetch(`/api/readinglists/${listId}/themes`, {
                 method: "POST",
                 body: JSON.stringify({ title }),
                 headers: { "Content-Type": "application/json" }
-            }).then(r => {
-                if (r.ok) {
-                    location.reload();
-                    connection.invoke("UpdateList", listId);
-                }
-            });
+            }).then(r => r.ok && (() => { currentSkip = 0; refreshThemes(); })());
         };
-                document.querySelectorAll(".addItemBtn").forEach(btn => {
-            btn.onclick = function () {
-                const themeId = this.dataset.theme;
-                const input = document.querySelector(`.newItemInput[data-theme="${themeId}"]`);
-                const text = input.value;
 
-                fetch(`/api/readinglists/themes/${themeId}/items`, {
-                    method: "POST",
-                    body: JSON.stringify({ text }),
-                    headers: { "Content-Type": "application/json" }
-                }).then(r => {
-                    if (r.ok) {
-                        location.reload();
-                        connection.invoke("UpdateList", listId);
+                let currentSkip = 0;
+
+                function refreshThemes(skip = currentSkip, limit = pageSize) {
+            fetch(`/api/readinglists/${listId}/themes?skip=${skip}&limit=${limit}`)
+                .then(r => r.json())
+                .then(themes => {
+                    const container = document.querySelector('#themesContainer');
+
+                    if (skip === 0) container.innerHTML = ''; // first page, clear all
+
+                    // remove old Load More button if exists
+                    const oldBtn = document.getElementById('loadMoreThemes');
+                    if (oldBtn) oldBtn.remove();
+
+                    // render themes
+                    themes.forEach(theme => {
+                        const div = document.createElement('div');
+                        div.className = 'theme-block';
+                        div.innerHTML = `
+                            <h3>${theme.name}</h3>
+                            <div>
+                                <input class="newItemInput" data-theme="${theme.id}" placeholder="Add item..." />
+                                <button class="addItemBtn btn btn-primary" data-theme="${theme.id}">Add</button>
+                            </div>
+                            <ul>
+                                ${theme.items.map(item => `
+                                    <li data-id="${item.id}">
+                                        <input type="checkbox" ${item.isDone ? 'checked' : ''} class="chk" />
+                                        ${item.text}
+                                        <button class="del btn btn-danger btn-sm">X</button>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                        container.appendChild(div);
+                    });
+
+                    attachEvents();
+
+                    // if we got a full page, there might be more themes
+                    if (themes.length === limit) {
+                        currentSkip += limit; // next page
+                        const btn = document.createElement('button');
+                        btn.id = 'loadMoreThemes';
+                        btn.textContent = 'Load More Themes';
+                        btn.className = 'btn btn-secondary mt-2';
+                        btn.onclick = () => refreshThemes(currentSkip, pageSize);
+                        container.appendChild(btn); // always at the bottom
                     }
                 });
-            };
-        });
+        }
 
-        document.querySelectorAll(".chk").forEach(chk => {
-            chk.onchange = function () {
-                const id = this.parentElement.getAttribute("data-id");
-                fetch(`/api/readinglists/items/${id}/toggle`, { method: "PUT" })
-                    .then(() => connection.invoke("UpdateList", listId));
-            };
-        });
 
-        document.querySelectorAll(".del").forEach(btn => {
-            btn.onclick = function () {
-                const id = this.parentElement.getAttribute("data-id");
-                fetch(`/api/readinglists/items/${id}`, { method: "DELETE" })
-                    .then(() => connection.invoke("UpdateList", listId));
-            };
-        });
+
+        // Attach event handlers for dynamically created elements
+        function attachEvents() {
+            // Add item
+            document.querySelectorAll(".addItemBtn").forEach(btn => {
+                btn.onclick = function () {
+                    const themeId = this.dataset.theme;
+                    const input = document.querySelector(`.newItemInput[data-theme="${themeId}"]`);
+                    const text = input.value.trim();
+                    if (!text) return;
+
+                    fetch(`/api/readinglists/themes/${themeId}/items`, {
+                        method: "POST",
+                        body: JSON.stringify({ text }),
+                        headers: { "Content-Type": "application/json" }
+                    }).then(r => r.ok && refreshThemes());
+                };
+            });
+
+            // Toggle item done
+            document.querySelectorAll(".chk").forEach(chk => {
+                chk.onchange = function () {
+                    const id = this.parentElement.dataset.id;
+                    fetch(`/api/readinglists/items/${id}/toggle`, { method: "PUT" })
+                        .then(() => refreshThemes());
+                };
+            });
+
+            // Delete item
+            document.querySelectorAll(".del").forEach(btn => {
+                btn.onclick = function () {
+                    const id = this.parentElement.dataset.id;
+                    fetch(`/api/readinglists/items/${id}`, { method: "DELETE" })
+                        .then(() => refreshThemes());
+                };
+            });
+        }
+
+        // Initial load
+        refreshThemes();
     </script>
 }

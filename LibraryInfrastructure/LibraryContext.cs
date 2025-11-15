@@ -25,6 +25,7 @@ namespace LibraryInfrastructure
         public DbSet<ReadingList> ReadingLists =>Set<ReadingList>();
         public DbSet<ReadingListTheme> ReadingListThemes => Set<ReadingListTheme>();
         public DbSet<ReadingListItem> ReadingListItems => Set<ReadingListItem>();
+        public DbSet<Videos> Videos => Set<Videos>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

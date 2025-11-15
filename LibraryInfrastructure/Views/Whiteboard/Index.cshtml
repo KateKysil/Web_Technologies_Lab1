@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Shared Whiteboard";
+}
+
+<link rel="stylesheet" href="~/css/whiteboard.css" />
+
+<div class="wb-page">
+
+    <div class="wb-toolbar">
+        <button id="btnPen" class="tool active">Pen</button>
+        <label class="tool">
+            Color
+            <input type="color" id="colorPicker" value="#000000" />
+        </label>
+        <label class="tool">
+            Size
+            <input type="range" id="sizePicker" min="1" max="20" value="2" />
+        </label>
+        <button id="btnClear" class="tool danger">Clear</button>
+        <button id="btnAddNote" class="tool note">Add Note</button>
+    </div>
+
+    <div class="wb-container">
+        <canvas id="boardCanvas"></canvas>
+
+        <div id="notesContainer" class="notes-container"></div>
+    </div>
+
+    <div class="wb-footer">
+        <small>Shared board — everyone connected sees changes in real time.</small>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script src="~/js/whiteboard.js"></script>

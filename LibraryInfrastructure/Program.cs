@@ -110,6 +110,6 @@ using (var scope = app.Services.CreateScope())
 }
 app.MapRazorPages();
 app.MapHub<ReadingListHub>("/readingListHub");
-
+app.MapHub<BoardHub>("/boardHub");
 app.Run();
 
