@@ -1,5 +1,6 @@
 using LibraryDomain.Model;
 using LibraryInfrastructure;
+using LibraryInfrastructure.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 builder.Services.AddSingleton<IEmailSender, DEmailSender>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 
@@ -67,6 +69,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
@@ -106,6 +109,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 app.MapRazorPages();
+app.MapHub<ReadingListHub>("/readingListHub");
 
 app.Run();
 

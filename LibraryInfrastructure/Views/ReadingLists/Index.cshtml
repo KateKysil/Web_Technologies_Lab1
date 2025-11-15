@@ -1,25 +1,57 @@
-﻿<h2>Your Reading Lists</h2>
+﻿@model LibraryInfrastructure.Models.ReadingListsIndexViewModel
 
-<a asp-action="Create" class="btn btn-primary">Create New List</a>
+<h2>Reading Lists</h2>
 
-<table class="table mt-3">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Owner</th>
-            <th>Public</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var list in Model)
-        {
+<a asp-action="Create" class="btn btn-primary mb-3">Open or Create My List</a>
+
+@if (Model.MyLists.Any())
+{
+    <h3>My Lists</h3>
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    <a asp-action="Details" asp-route-id="@list.Id">@list.Title</a>
-                </td>
-                <td>@list.OwnerId</td>
-                <td>@(list.IsPublic ? "Yes" : "No")</td>
+                <th>Title</th>
+                <th>Public</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var list in Model.MyLists)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@list.Id">@list.Title</a>
+                    </td>
+                    <td>@(list.IsPublic ? "Yes" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3>Available Public Lists</h3>
+@if (Model.PublicLists.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Owner</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var list in Model.PublicLists)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@list.Id">@list.Title</a>
+                    </td>
+                    <td>@list.OwnerId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No public lists available.</p>
+}

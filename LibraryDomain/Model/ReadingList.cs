@@ -27,5 +27,8 @@ namespace LibraryDomain.Model
         public bool IsDone { get; set; }
     }
 
-
+    public class AddReadingListItemDto
+    {
+        public string Text { get; set; }
+    }
 }

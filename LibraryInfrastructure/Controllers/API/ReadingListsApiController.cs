@@ -17,13 +17,16 @@ namespace LibraryInfrastructure.Controllers.API
         }
 
         [HttpPost("{listId}/items")]
-        public async Task<IActionResult> AddItem(int listId, [FromBody] ReadingListItem dto)
+        public async Task<IActionResult> AddItem(int listId, [FromBody] AddReadingListItemDto dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Text))
+                return BadRequest("Text is required");
+
             var item = new ReadingListItem
             {
-                ReadingListId = listId,
-                Text = dto.Text,
-                IsDone = false
+                ReadingListId = listId,  
+                Text = dto.Text,        
+                IsDone = false         
             };
 
             _db.ReadingListItems.Add(item);
@@ -31,6 +34,7 @@ namespace LibraryInfrastructure.Controllers.API
 
             return Ok(item);
         }
+
 
         [HttpPut("items/{id}/toggle")]
         public async Task<IActionResult> Toggle(int id)

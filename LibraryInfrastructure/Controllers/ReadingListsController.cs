@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibraryDomain.Model;
+using LibraryInfrastructure.Models;
 
 namespace LibraryInfrastructure.Controllers
 {
@@ -21,12 +22,22 @@ namespace LibraryInfrastructure.Controllers
         {
             var userId = _userManager.GetUserId(User);
 
-            var lists = await _db.ReadingLists
-                .Where(l => l.OwnerId == userId || l.IsPublic)
+            var myLists = await _db.ReadingLists
+                .Where(l => l.OwnerId == userId)
                 .ToListAsync();
 
-            return View(lists);
+            var publicLists = await _db.ReadingLists
+                .Where(l => l.IsPublic && l.OwnerId != userId)
+                .ToListAsync();
+
+            var vm = new ReadingListsIndexViewModel
+            {
+                MyLists = myLists,
+                PublicLists = publicLists
+            };
+            return View(vm);
         }
+
 
         public async Task<IActionResult> Details(int id)
         {
@@ -38,6 +49,29 @@ namespace LibraryInfrastructure.Controllers
 
             return View(list);
         }
+        public async Task<IActionResult> Create()
+        {
+            var userId = _userManager.GetUserId(User);
+            var existing = await _db.ReadingLists
+                .FirstOrDefaultAsync(l => l.OwnerId == userId);
+
+            if (existing != null)
+                return RedirectToAction("Details", new { id = existing.Id });
+
+            // Create new list
+            var list = new ReadingList
+            {
+                Title = "My Reading List",
+                OwnerId = userId,
+                IsPublic = false
+            };
+
+            _db.ReadingLists.Add(list);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = list.Id });
+        }
+
     }
 
 }

@@ -40,7 +40,12 @@
                 method: "POST",
                 body: JSON.stringify({ text }),
                 headers: { "Content-Type": "application/json" }
-            }).then(() => connection.invoke("UpdateList", listId));
+                }).then(response => {
+            if (response.ok) {
+                location.reload();
+                connection.invoke("UpdateList", listId);
+            }
+        });
         };
 
         document.querySelectorAll(".chk").forEach(chk => {
