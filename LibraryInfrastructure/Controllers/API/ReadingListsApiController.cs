@@ -1,6 +1,9 @@
-﻿using LibraryDomain.Model;
+﻿using DocumentFormat.OpenXml.Drawing;
+using LibraryDomain.Model;
 using LibraryInfrastructure.Data;
+using LibraryInfrastructure.Hubs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryInfrastructure.Controllers.API
@@ -11,10 +14,14 @@ namespace LibraryInfrastructure.Controllers.API
     {
         private readonly LibraryContext _db;
 
-        public ReadingListsApiController(LibraryContext db)
+        private readonly IHubContext<ReadingListHub> _hub;
+
+        public ReadingListsApiController(LibraryContext db, IHubContext<ReadingListHub> hub)
         {
             _db = db;
+            _hub = hub;
         }
+
 
         // GET: api/readinglists/{listId}/themes?skip=0&limit=5
         [HttpGet("{listId}/themes")]
@@ -51,7 +58,7 @@ namespace LibraryInfrastructure.Controllers.API
 
             _db.ReadingListThemes.Add(theme);
             await _db.SaveChangesAsync();
-
+            await _hub.Clients.Group($"list-{listId}").SendAsync("ListUpdated");
             return Ok(new { theme.Id, theme.Name });
         }
 
@@ -73,6 +80,7 @@ namespace LibraryInfrastructure.Controllers.API
             };
 
             _db.ReadingListItems.Add(item);
+            await _hub.Clients.Group($"list-{theme.ReadingListId}").SendAsync("ListUpdated");
             await _db.SaveChangesAsync();
 
             return Ok(new { item.Id, item.Text, item.IsDone });
@@ -87,7 +95,9 @@ namespace LibraryInfrastructure.Controllers.API
 
             item.IsDone = !item.IsDone;
             await _db.SaveChangesAsync();
-
+            var theme = await _db.ReadingListThemes.FindAsync(item.ThemeId);
+            await _hub.Clients.Group($"list-{theme.ReadingListId}")
+                .SendAsync("ListUpdated");
             return Ok(new { item.Id, item.IsDone });
         }
 
@@ -100,7 +110,8 @@ namespace LibraryInfrastructure.Controllers.API
 
             _db.ReadingListItems.Remove(item);
             await _db.SaveChangesAsync();
-
+            var theme = await _db.ReadingListThemes.FindAsync(item.ThemeId);
+            await _hub.Clients.Group($"list-{theme.ReadingListId}").SendAsync("ListUpdated");
             return NoContent();
         }
     }

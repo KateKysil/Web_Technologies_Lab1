@@ -14,10 +14,12 @@ namespace LibraryInfrastructure.Controllers
     public class BooksController : Controller
     {
         private readonly LibraryContext _context;
+        private readonly RabbitMqPublisher _publisher;
 
         public BooksController(LibraryContext context)
         {
             _context = context;
+            _publisher = new RabbitMqPublisher();
         }
 
         // GET: Books
@@ -407,6 +409,11 @@ namespace LibraryInfrastructure.Controllers
                     });
                 }
                 await _context.SaveChangesAsync();
+                var bookMsg = new BookCreatedMessage
+                {
+                    Title = book.Title
+                };
+                _publisher.Publish(bookMsg);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PublisherId"] = new SelectList(_context.Publishers, "Id", "PublisherName", book.PublisherId);

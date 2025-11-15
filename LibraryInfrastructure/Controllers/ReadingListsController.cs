@@ -27,7 +27,7 @@ namespace LibraryInfrastructure.Controllers
                 .ToListAsync();
 
             var publicLists = await _db.ReadingLists
-                .Where(l => l.isPublic && l.OwnerId != userId)
+                .Where(l => l.isPublic && l.OwnerId != userId).Include(l=> l.Owner)
                 .ToListAsync();
 
             var vm = new ReadingListsIndexViewModel

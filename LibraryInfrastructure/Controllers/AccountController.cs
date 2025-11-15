@@ -25,6 +25,7 @@ public class AccountController : Controller
     {
         var redirectUrl = Url.Action("GoogleResponse", "Account");
         var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+        properties.Parameters["prompt"] = "select_account";
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
